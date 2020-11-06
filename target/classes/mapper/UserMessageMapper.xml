@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wll.test.dao.UserMessageMapper">
+	<resultMap id="BaseResultMap" type="com.wll.test.po.UserMessageInfo">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="mess_name" property="messName" jdbcType="VARCHAR" />
+		<result column="mess_phone" property="messPhone" jdbcType="VARCHAR" />
+		<result column="mess_info" property="messInfo" jdbcType="VARCHAR" />
+		<result column="mess_status" property="messStatus" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, mess_name,mess_phone,mess_info,mess_status,create_time
+	</sql>
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from user_message where mess_status = 1
+	</select>
+
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from user_message where id = #{id} and mess_status = 1
+	</select>
+	
+	<update id="deleteById" parameterType="java.lang.Long">
+		update user_message set mess_status = 0 where id = #{id} and mess_status = 1
+	</update>
+	
+	<select id="selectByUserMessageInfo" resultMap="BaseResultMap" parameterType="com.wll.test.po.UserMessageInfo">
+		select
+		<include refid="Base_Column_List" />
+		from user_message where mess_status=1
+		<if test="messName != null and '' != messName">
+			and mess_name = #{messName,jdbcType=VARCHAR} 
+		</if>
+		<if test="messPhone != null and '' != messPhone">
+			and mess_phone like "%"#{messPhone,jdbcType=VARCHAR}"%" 
+		</if>	
+		order by create_time desc;
+	</select>
+	<insert id="insertSelective" parameterType="com.wll.test.po.UserMessageInfo" useGeneratedKeys="true" keyProperty="id">
+		insert into user_message
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="messName != null">
+				mess_name,
+			</if>
+			<if test="messPhone != null">
+				mess_phone,
+			</if>
+			<if test="messInfo != null">
+				mess_info,
+			</if>
+			<if test="messStatus != null">
+				mess_status,
+			</if>
+			<if test="createTime != null">
+				create_time
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="messName != null">
+				#{messName,jdbcType=VARCHAR},
+			</if>
+			<if test="messPhone != null">
+				#{messPhone,jdbcType=VARCHAR},
+			</if>
+			<if test="messInfo != null">
+				#{messInfo,jdbcType=VARCHAR},
+			</if>
+			<if test="messStatus != null">
+				#{messStatus,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+</mapper>
