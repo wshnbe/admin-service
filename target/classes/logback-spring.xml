@@ -26,11 +26,11 @@
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
-    <root level="info">
+    <root level="debug">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
     </root>
-    <logger name="com.wll.test" level="info" additivity="false">
+    <logger name="com.wll.test" level="debug" additivity="false">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="FILE" />
     </logger>
